@@ -1,5 +1,5 @@
 import base64
-from google import genai
+import google.generativeai as genai
 from google.genai import types
 import azure.functions as func
 import os  # 환경 변수 불러오기
