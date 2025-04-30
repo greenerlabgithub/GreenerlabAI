@@ -50,23 +50,29 @@ def generate(image_data: bytes, additional_info: str):
         tools=tools,
         response_mime_type="text/plain",
         system_instruction=[
-            types.Part.from_text(text=(
-                "이 이미지들은 수목 혹은 식물에 영향을 주는 곤충 혹은 병증이 발현한 사진입니다.\n"
-                "이미지에서 보이는 곤충 혹은 병증을 분석 및 추출하여 검색엔진에서 가장 유사한 정보를 찾아냅니다.\n"
-                "…(중략)…"
+            types.Part.from_text(text=("""이 이미지들은 수목 혹은 식물에 영향을 주는 곤충 혹은 증상이 발현한 병증입니다.
+이미지에서 보이는 곤충 혹은 병증을 분석 및 추출하여 검색엔진에서 가장 유사한 정보를 찾아냅니다.
+먼저 Google Search를 통해 가장 유사한 이미지 혹은 오브젝트를 찾아 정보를 추출합니다.
+유사한 이미지 혹은 오브젝트를 찾지 못할 경우 예상되는 리스트를 알려줍니다.
+기본적인 정보는 아래 폼과 같이 전달됩니다.
+수목 혹은 식물 : 
+촬영된 부위 : 
+현재 증상 : 
+가장 유사한 정보를 찾을 경우 아래 폼과 같이 정리해줍니다.
+병해충 혹은 증상 :
+병해충 혹은 증상의 자세한 정보 :
+방제 및 처리 방법 :"""
             )),
         ],
     )
 
-    response = ""
-    for chunk in client.models.generate_content_stream(
+    response =  client.models.generate_content(
         model=model,
         contents=contents,
         config=config
-    ):
-        response += chunk.text
+    )
 
-    return response
+    return response.text
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     logger.info("Invocation ID=%s: 요청 수신", context.invocation_id)
