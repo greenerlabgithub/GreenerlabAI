@@ -2,7 +2,7 @@ import base64
 import logging
 from io import BytesIO
 from PIL import Image
-import google.generativeai as genai
+import google as genai
 from google.genai import types
 import azure.functions as func
 import os
