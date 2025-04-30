@@ -1,2 +1,2 @@
-azure-functions==1.10.0
+azure-functions==1.21.1
 google-genai==0.1.0  # 정확한 버전은 설치 시 확인 후 지정
