@@ -29,25 +29,25 @@ def generate(image_data: bytes, additional_info: str):
         safety_settings=[
             types.SafetySetting(
                 category="HARM_CATEGORY_HARASSMENT",
-                threshold="BLOCK_ONLY_HIGH",  # Block few
+                threshold="BLOCK_ONLY_HIGH",
             ),
             types.SafetySetting(
                 category="HARM_CATEGORY_HATE_SPEECH",
-                threshold="BLOCK_ONLY_HIGH",  # Block few
+                threshold="BLOCK_ONLY_HIGH",
             ),
             types.SafetySetting(
                 category="HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                threshold="BLOCK_LOW_AND_ABOVE",  # Block most
+                threshold="BLOCK_LOW_AND_ABOVE",
             ),
             types.SafetySetting(
                 category="HARM_CATEGORY_DANGEROUS_CONTENT",
-                threshold="BLOCK_ONLY_HIGH",  # Block few
+                threshold="BLOCK_ONLY_HIGH",
             ),
         ],
         tools=tools,
         response_mime_type="text/plain",
         system_instruction=[
-            types.Part.from_text(text="""이 이미지들은 수목 혹은 식물에 영향을 주는 곤충 혹은 증상이 발현한 병증입니다.
+            types.Part.from_text(text="""이 이미지들은 수목 혹은 식물에 영향을 주는 곤충 혹은 병증이 발현한 사진입니다.
 이미지에서 보이는 곤충 혹은 병증을 분석 및 추출하여 검색엔진에서 가장 유사한 정보를 찾아냅니다.
 먼저 Google Search를 통해 가장 유사한 이미지 혹은 오브젝트를 찾아 정보를 추출합니다.
 유사한 이미지 혹은 오브젝트를 찾지 못할 경우 예상되는 리스트를 알려줍니다.
@@ -62,7 +62,6 @@ def generate(image_data: bytes, additional_info: str):
         ],
     )
 
-    # 결과 수집
     response = ""
     for chunk in client.models.generate_content_stream(
         model=model,
@@ -75,31 +74,29 @@ def generate(image_data: bytes, additional_info: str):
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
-        # Power Apps에서 Base64 이미지 데이터와 추가 정보 받아오기
-        image_base64 = req.params.get('imageData')
-        additional_info = req.params.get('additionalInfo')
-        
+        # JSON 바디 파싱
+        try:
+            body = req.get_json()  # Content-Type: application/json
+        except ValueError:
+            return func.HttpResponse("잘못된 JSON 형식입니다.", status_code=400)
+
+        image_base64    = body.get("imageData")
+        additional_info = body.get("additionalInfo", "")
+
         if not image_base64:
-            return func.HttpResponse("이미지 데이터가 없습니다.", status_code=400)
-        
+            return func.HttpResponse("JSON에 imageData 필드가 없습니다.", status_code=400)
+
         # Base64로 인코딩된 이미지를 디코딩
         image_data = base64.b64decode(image_base64)
 
         # 이미지 데이터를 전달하여 결과 생성
         result = generate(image_data, additional_info)
-        
-        # 결과를 텍스트 형태로 반환
-        # 결과는 예를 들어 "병해충: 응애\n병해충 정보: 응애는 식물의 즙을 빨아먹는 해충입니다.\n방제 방법: 살충제를 사용합니다."와 같은 형식으로 반환됩니다.
 
         return func.HttpResponse(
             body=result,
             status_code=200,
             mimetype="text/plain"
         )
-    
+
     except Exception as e:
         return func.HttpResponse(f"Error: {str(e)}", status_code=500)
-    
-
-
-    
