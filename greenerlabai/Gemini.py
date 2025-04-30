@@ -2,7 +2,7 @@ import base64
 import logging
 from io import BytesIO
 from PIL import Image
-import google as genai
+from google import genai
 from google.genai import types
 import azure.functions as func
 import os
@@ -22,7 +22,7 @@ def part_from_image_bytes(image_data: bytes):
 
 def generate(image_data: bytes, additional_info: str):
     client = genai.Client(api_key=API_KEY)
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    model_id = "gemini-2.0-flash-001"
 
     contents = [
         types.Content(
@@ -67,7 +67,7 @@ def generate(image_data: bytes, additional_info: str):
     )
 
     response =  client.models.generate_content(
-        model=model,
+        model=model_id,
         contents=contents,
         config=config
     )
