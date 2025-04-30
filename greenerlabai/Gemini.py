@@ -21,7 +21,7 @@ def part_from_image_bytes(image_data: bytes):
     return types.Part.from_bytes(data=image_data, mime_type=mime_type)
 
 def generate(image_data: bytes, additional_info: str):
-    genai.configure(api_key=API_KEY)
+    client = genai.configure(api_key=API_KEY)
     model = genai.GenerativeModel("gemini-2.0-flash")
 
     contents = [
@@ -59,7 +59,7 @@ def generate(image_data: bytes, additional_info: str):
     )
 
     response = ""
-    for chunk in genai.client.models.generate_content_stream(
+    for chunk in client.models.generate_content_stream(
         model=model,
         contents=contents,
         config=config
