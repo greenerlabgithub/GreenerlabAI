@@ -66,7 +66,7 @@ def generate(image_data: bytes, additional_info: str):
         ],
     )
 
-    response =  client.model.generate_content(
+    response =  client.models.generate_content(
         model=model,
         contents=contents,
         config=config
