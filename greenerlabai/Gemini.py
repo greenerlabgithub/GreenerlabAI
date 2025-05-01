@@ -36,15 +36,15 @@ def generate(image_datas: list[bytes], additional_info: str):
 
     tools = [ types.Tool(google_search=types.GoogleSearch()) ]
     config = types.GenerateContentConfig(
-        temperature=0,
-        top_p=0.95,
-        top_k=20,
-        candidate_count=1,
-        seed=5,
-        max_output_tokens=100,
-        stop_sequences=["STOP!"],
-        presence_penalty=0.0,
-        frequency_penalty=0.0,
+#        temperature=0,
+        top_p=0.5,
+#       top_k=20,
+#        candidate_count=1,
+#        seed=5,
+#        max_output_tokens=100,
+#        stop_sequences=["STOP!"],
+#        presence_penalty=0.0,
+#        frequency_penalty=0.0,
         safety_settings=[
             types.SafetySetting(category="HARM_CATEGORY_HARASSMENT", threshold="BLOCK_ONLY_HIGH"),
             types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH",  threshold="BLOCK_ONLY_HIGH"),
