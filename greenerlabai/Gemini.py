@@ -1,5 +1,6 @@
 import base64
 import logging
+import json
 from io import BytesIO
 from PIL import Image
 from google import genai
@@ -79,30 +80,48 @@ def generate(image_datas: list[bytes], additional_info: str):
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     logger.info("Invocation ID=%s: 요청 수신", context.invocation_id)
     try:
-        body = req.get_json()  # JSON body parsing
+        body = req.get_json()
     except ValueError:
-        logger.error("Invalid JSON")
-        return func.HttpResponse("잘못된 JSON 형식입니다.", status_code=400)
+        return func.HttpResponse(
+            json.dumps({"error": "잘못된 JSON 형식입니다."}, ensure_ascii=False),
+            status_code=400,
+            mimetype="application/json"
+        )
 
-    # imageData1, imageData2, imageData3에서 값 수집
-    image_datas: list[bytes] = []
+    image_datas = []
     for key in ("imageData1", "imageData2", "imageData3"):
         b64 = body.get(key)
         if b64:
             try:
                 image_datas.append(base64.b64decode(b64))
             except Exception:
-                logger.warning("Bad Base64 for %s", key)
-                return func.HttpResponse(f"{key} 필드의 Base64 문자열이 잘못되었습니다.", status_code=400)
+                return func.HttpResponse(
+                    json.dumps({"error": f"{key} 필드의 Base64 문자열이 잘못되었습니다."}, ensure_ascii=False),
+                    status_code=400,
+                    mimetype="application/json"
+                )
 
     if not (1 <= len(image_datas) <= 3):
-        return func.HttpResponse("imageData1~3 중 최소 1개, 최대 3개의 이미지를 전달해주세요.", status_code=400)
+        return func.HttpResponse(
+            json.dumps({"error": "imageData1~3 중 최소 1개, 최대 3개의 이미지를 전달해주세요."}, ensure_ascii=False),
+            status_code=400,
+            mimetype="application/json"
+        )
 
     additional_info = body.get("additionalInfo", "")
 
     try:
-        result = generate(image_datas, additional_info)
-        return func.HttpResponse(body=result, status_code=200, mimetype="text/plain")
+        result_text = generate(image_datas, additional_info)
+        # JSON으로 포장
+        return func.HttpResponse(
+            json.dumps({"result": result_text}, ensure_ascii=False),
+            status_code=200,
+            mimetype="application/json"
+        )
     except Exception as e:
         logger.exception("처리 중 예외 발생")
-        return func.HttpResponse(f"Error: {str(e)}", status_code=500)
+        return func.HttpResponse(
+            json.dumps({"error": str(e)}, ensure_ascii=False),
+            status_code=500,
+            mimetype="application/json"
+        )
