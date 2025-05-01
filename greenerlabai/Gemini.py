@@ -54,8 +54,8 @@ def generate(image_datas: list[bytes], additional_info: str):
         tools=tools,
         response_mime_type="text/plain",
         system_instruction=[
-            types.Part.from_text(text="""이 이미지들은 수목 혹은 식물에 영향을 주는 곤충 혹은 증상이 발현한 병증입니다.
-이미지에서 보이는 곤충 혹은 병증을 분석 및 추출하여 검색엔진에서 가장 유사한 정보를 찾아냅니다.
+            types.Part.from_text(text="""이 이미지들은 같은 수목 혹은 식물에 영향을 주는 곤충 혹은 증상이 발현한 병증입니다.
+이미지들을 확인하고 곤충 혹은 병증을 분석 및 추출하여 검색엔진에서 가장 유사한 정보를 찾아냅니다.
 먼저 Google Search를 통해 가장 유사한 이미지 혹은 오브젝트를 찾아 정보를 추출합니다.
 유사한 이미지 혹은 오브젝트를 찾지 못할 경우 예상되는 리스트를 알려줍니다.
 기본적인 정보는 아래 폼과 같이 전달됩니다.
