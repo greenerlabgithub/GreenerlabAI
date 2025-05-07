@@ -53,7 +53,7 @@ def generate(image_datas: list[bytes], additional_info: str):
             types.SafetySetting(category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="BLOCK_ONLY_HIGH"),
         ],
         tools=tools,
-        response_mime_type="text/plain",
+        response_mime_type="application/json",
         system_instruction=[
             types.Part.from_text(text="""이 이미지들은 같은 수목 혹은 식물에 영향을 주는 곤충 혹은 증상이 발현한 병증입니다.
 이미지들을 확인하고 곤충 혹은 병증을 분석 및 추출하여 검색엔진에서 가장 유사한 정보를 찾아냅니다.
