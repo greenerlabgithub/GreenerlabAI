@@ -114,7 +114,9 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
         result_text = generate(image_datas, additional_info)
         # JSON으로 포장
         return func.HttpResponse(
-            json.dumps({"result": result_text}), status_code=200,headers={"Content-Type": "application/json"}
+            json.dumps({"result": result_text}, ensure_ascii=False),
+            status_code=200,
+            mimetype="application/json"
         )
     except Exception as e:
         logger.exception("처리 중 예외 발생")
