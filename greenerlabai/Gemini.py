@@ -72,7 +72,7 @@ def generate(image_datas: list[bytes], additional_info: str):
         contents=contents,
         config=config
     )
-    return response.text
+    return response
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     logger.info("Invocation ID=%s: 요청 수신", context.invocation_id)
