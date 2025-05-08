@@ -105,7 +105,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
         return func.HttpResponse(
             json.dumps({"error": "imageData1~3 중 최소 1개, 최대 3개의 이미지를 전달해주세요."}, ensure_ascii=False),
             status_code=400,
-            mimetype={"Content-Type": "application/json"}
+            headers={"Content-Type": "application/json"}
         )
 
     additional_info = body.get("additionalInfo", "")
@@ -116,7 +116,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
         return func.HttpResponse(
             json.dumps({"result": result_text}, ensure_ascii=False),
             status_code=200,
-            headers="application/json"
+            headers={"Content-Type": "application/json"}
         )
     except Exception as e:
         logger.exception("처리 중 예외 발생")
