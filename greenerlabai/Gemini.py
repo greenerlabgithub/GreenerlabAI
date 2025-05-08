@@ -85,7 +85,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
         return func.HttpResponse(
             json.dumps({"error": "잘못된 JSON 형식입니다."}, ensure_ascii=False),
             status_code=400,
-            mimetype="application/json"
+            headers={"Content-Type": "application/json"}
         )
 
     image_datas = []
@@ -98,7 +98,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
                 return func.HttpResponse(
                     json.dumps({"error": f"{key} 필드의 Base64 문자열이 잘못되었습니다."}, ensure_ascii=False),
                     status_code=400,
-                    mimetype="application/json"
+                    headers={"Content-Type": "application/json"}
                 )
 
     if not (1 <= len(image_datas) <= 3):
@@ -123,5 +123,5 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
         return func.HttpResponse(
             json.dumps({"error": str(e)}, ensure_ascii=False),
             status_code=500,
-            mimetype="application/json"
+            headers={"Content-Type": "application/json"}
         )
