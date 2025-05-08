@@ -112,7 +112,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
         return func.HttpResponse(
             json.dumps(
                 {
-                    "result": result_text
+                    "result": str(result_text)
                 }, ensure_ascii=False),
             status_code=200,
             headers={"Content-Type": "application/json"}
