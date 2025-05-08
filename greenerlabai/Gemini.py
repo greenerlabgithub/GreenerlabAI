@@ -62,8 +62,7 @@ def generate(image_datas: list[bytes], additional_info: str):
 기본적인 정보는 아래 폼과 같이 전달됩니다.
 수목 혹은 식물 : ,촬영된 부위 : ,현재 증상 : 
 가장 유사한 정보를 찾을 경우 아래 폼과 같이 정리해줍니다.
-병해충 혹은 증상 : ,병해충 혹은 증상의 자세한 정보 : ,방제 및 처리 방법 :
-이외의 다른 모든 대답은 하지않고 정해진 폼의 형태로만 대답합니다."""),
+병해충 혹은 증상 : ,병해충 혹은 증상의 자세한 정보 : ,방제 및 처리 방법 :"""),
         ],
     )
 
@@ -72,7 +71,7 @@ def generate(image_datas: list[bytes], additional_info: str):
         contents=contents,
         config=config
     )
-    return response
+    return response.text
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     logger.info("Invocation ID=%s: 요청 수신", context.invocation_id)
